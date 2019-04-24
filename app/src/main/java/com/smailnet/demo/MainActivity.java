@@ -40,12 +40,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         title_editText = findViewById(R.id.title_editText);
         text_editText = findViewById(R.id.text_editText);
         Button button = findViewById(R.id.send);
-        Button button1 = findViewById(R.id.receive);
-        Button button2 = findViewById(R.id.receive2);
+//        Button button1 = findViewById(R.id.receive);
+//        Button button2 = findViewById(R.id.receive2);
 
         button.setOnClickListener(this);
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
+//        button1.setOnClickListener(this);
+//        button2.setOnClickListener(this);
     }
 
     /**
@@ -82,68 +82,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.send:
                 sendMessage();
                 break;
-            case R.id.receive:
-                /**
-                 * 获取邮件
-                 */
-                Islands.circularProgress(this)
-                        .setCancelable(false)
-                        .setMessage("同步中...")
-                        .show()
-                        .run(new OnRunningListener() {
-                            @Override
-                            public void onRunning(final ProgressDialog progressDialog) {
-                                EmailReceiveClient emailReceiveClient = new EmailReceiveClient(EmailApp.emailConfig());
-                                emailReceiveClient
-                                        .popReceiveAsyn(MainActivity.this, new GetReceiveCallback() {
-                                            @Override
-                                            public void gainSuccess(List<EmailMessage> messageList, int count) {
-                                                Log.i("oversee", "邮件总数：" + count );
-
-                                                progressDialog.dismiss();
-                                                if (count > 0) {
-                                                    Log.i("oversee", "邮件总数：" + count + " 标题：" +  messageList.get(0).getSubject() + "content" + messageList.get(0).getContent());
-                                                } else {
-                                                    Toast.makeText(MainActivity.this, "没有邮件", Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            }
-
-                                            @Override
-                                            public void gainFailure(String errorMsg) {
-                                                progressDialog.dismiss();
-                                                Log.e("oversee", "错误日志：" + errorMsg);
-                                            }
-                                        });
-                            }
-                        });
-                break;
-            case R.id.receive2:
-                Islands.circularProgress(this)
-                        .setCancelable(false)
-                        .setMessage("同步中...")
-                        .show()
-                        .run(new OnRunningListener() {
-                            @Override
-                            public void onRunning(final ProgressDialog progressDialog) {
-                                EmailReceiveClient emailReceiveClient = new EmailReceiveClient(EmailApp.emailConfig());
-                                emailReceiveClient
-                                        .imapReceiveAsyn(MainActivity.this, new GetReceiveCallback() {
-                                            @Override
-                                            public void gainSuccess(List<EmailMessage> messageList, int count) {
-                                                progressDialog.dismiss();
-                                                Log.i("oversee", "邮件总数：" + count + " 标题：" +  messageList.get(0).getSubject());
-                                            }
-
-                                            @Override
-                                            public void gainFailure(String errorMsg) {
-                                                progressDialog.dismiss();
-                                                Log.e("oversee", "错误日志：" + errorMsg);
-                                            }
-                                        });
-                            }
-                        });
-                break;
+//            case R.id.receive:
+//                /**
+//                 * 获取邮件
+//                 */
+//                Islands.circularProgress(this)
+//                        .setCancelable(false)
+//                        .setMessage("同步中...")
+//                        .show()
+//                        .run(new OnRunningListener() {
+//                            @Override
+//                            public void onRunning(final ProgressDialog progressDialog) {
+//                                EmailReceiveClient emailReceiveClient = new EmailReceiveClient(EmailApp.emailConfig());
+//                                emailReceiveClient
+//                                        .popReceiveAsyn(MainActivity.this, new GetReceiveCallback() {
+//                                            @Override
+//                                            public void gainSuccess(List<EmailMessage> messageList, int count) {
+//                                                Log.i("oversee", "邮件总数：" + count );
+//
+//                                                progressDialog.dismiss();
+//                                                if (count > 0) {
+//                                                    Log.i("oversee", "邮件总数：" + count + " 标题：" +  messageList.get(0).getSubject() + "content" + messageList.get(0).getContent());
+//                                                } else {
+//                                                    Toast.makeText(MainActivity.this, "没有邮件", Toast.LENGTH_SHORT).show();
+//
+//                                                }
+//                                            }
+//
+//                                            @Override
+//                                            public void gainFailure(String errorMsg) {
+//                                                progressDialog.dismiss();
+//                                                Log.e("oversee", "错误日志：" + errorMsg);
+//                                            }
+//                                        });
+//                            }
+//                        });
+//                break;
+//            case R.id.receive2:
+//                Islands.circularProgress(this)
+//                        .setCancelable(false)
+//                        .setMessage("同步中...")
+//                        .show()
+//                        .run(new OnRunningListener() {
+//                            @Override
+//                            public void onRunning(final ProgressDialog progressDialog) {
+//                                EmailReceiveClient emailReceiveClient = new EmailReceiveClient(EmailApp.emailConfig());
+//                                emailReceiveClient
+//                                        .imapReceiveAsyn(MainActivity.this, new GetReceiveCallback() {
+//                                            @Override
+//                                            public void gainSuccess(List<EmailMessage> messageList, int count) {
+//                                                progressDialog.dismiss();
+//                                                Log.i("oversee", "邮件总数：" + count + " 标题：" +  messageList.get(0).getSubject());
+//                                            }
+//
+//                                            @Override
+//                                            public void gainFailure(String errorMsg) {
+//                                                progressDialog.dismiss();
+//                                                Log.e("oversee", "错误日志：" + errorMsg);
+//                                            }
+//                                        });
+//                            }
+//                        });
+//                break;
         }
     }
 }

@@ -49,7 +49,8 @@ public class MailListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MailListActivity.this, "233", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MailListActivity.this, "233", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MailListActivity.this,MainActivity.class));
             }
         });
 
