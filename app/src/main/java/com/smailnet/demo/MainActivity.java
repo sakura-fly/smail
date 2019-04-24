@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void sendFailure(String errorMsg) {
+                        Log.e("send mail", "错误日志：" + errorMsg);
+
                         Islands.ordinaryDialog(MainActivity.this)
                                 .setText(null, "发送失败 ：" + errorMsg)
                                 .setButton("关闭", null, null)
@@ -96,8 +98,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         .popReceiveAsyn(MainActivity.this, new GetReceiveCallback() {
                                             @Override
                                             public void gainSuccess(List<EmailMessage> messageList, int count) {
+                                                Log.i("oversee", "邮件总数：" + count );
+
                                                 progressDialog.dismiss();
-                                                Log.i("oversee", "邮件总数：" + count + " 标题：" +  messageList.get(0).getSubject());
+                                                if (count > 0) {
+                                                    Log.i("oversee", "邮件总数：" + count + " 标题：" +  messageList.get(0).getSubject() + "content" + messageList.get(0).getContent());
+                                                } else {
+                                                    Toast.makeText(MainActivity.this, "没有邮件", Toast.LENGTH_SHORT).show();
+
+                                                }
                                             }
 
                                             @Override
