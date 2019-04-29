@@ -10,6 +10,14 @@ public class Contacts extends RealmObject {
     private String nickName;
     private String email;
 
+    public Contacts(String nickName, String email) {
+        this.nickName = nickName;
+        this.email = email;
+    }
+
+    public Contacts() {
+    }
+
     public String getId() {
         return id;
     }
@@ -32,5 +40,14 @@ public class Contacts extends RealmObject {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Contacts{" +
+                "id='" + id + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
