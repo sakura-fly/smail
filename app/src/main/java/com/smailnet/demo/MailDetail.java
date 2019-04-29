@@ -21,7 +21,7 @@ public class MailDetail extends AppCompatActivity {
         mail = findViewById(R.id.mail);
         EmailMessage em = new Gson().fromJson(getIntent().getStringExtra("mail"),EmailMessage.class);
         Log.i("mailcontent",em.getContent());
-        RichText.from(em.getContent()).into(mail);
+        RichText.fromHtml(em.getContent()).into(mail);
 
     }
 }

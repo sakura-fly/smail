@@ -1,12 +1,17 @@
 package com.smailnet.demo;
 
-import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ListPopupWindow;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+// import android.widget.ListPopupWindow;
 import android.widget.Toast;
 
 import com.smailnet.eamil.Callback.GetReceiveCallback;
@@ -19,7 +24,7 @@ import com.smailnet.islands.Islands;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener  {
 
     private EditText address_editText;
     private EditText title_editText;
@@ -44,8 +49,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Button button2 = findViewById(R.id.receive2);
 
         button.setOnClickListener(this);
+        address_editText.setOnFocusChangeListener(this);
+
 //        button1.setOnClickListener(this);
 //        button2.setOnClickListener(this);
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.layout.mail_menu,menu);
+        return true;
     }
 
     /**
@@ -146,4 +160,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                break;
         }
     }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if (b) {
+            showListPopulWindow(); //调用显示PopuWindow 函数
+        }
+    }
+
+    private void showListPopulWindow(){
+        String[] list = { "item1", "item2", "item3", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4" };
+        ListPopupWindow listPopupWindow = new ListPopupWindow(this);
+        listPopupWindow.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, list));
+        listPopupWindow.setAnchorView(address_editText);
+        listPopupWindow.setModal(true);
+        listPopupWindow.show();
+    }
+
 }
