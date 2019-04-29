@@ -171,7 +171,7 @@ class EmailCore {
      * @param content
      * @throws MessagingException
      */
-    public EmailCore setMessage(String nickname, Address[] to, Address[] cc, Address[] bcc, String subject, String text, Object content) throws MessagingException {
+    public EmailCore setMessage(String nickname, Address[] to, Address[] cc, Address[] bcc, String subject, String text, Object     content) throws MessagingException {
         Message message = new MimeMessage(session);
         message.addRecipients(Message.RecipientType.TO, to);
         if (cc != null) {

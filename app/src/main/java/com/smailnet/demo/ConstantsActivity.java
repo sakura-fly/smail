@@ -1,7 +1,10 @@
 package com.smailnet.demo;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -56,10 +59,35 @@ public class ConstantsActivity extends AppCompatActivity implements SwipeRefresh
         List<Contacts> l = mRealm.copyFromRealm(c);
         Log.i("l", l.toString());
 
+
     }
 
     @Override
     public void onRefresh() {
-        cList();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cList();
+                mHandler.sendEmptyMessage(1);
+            }
+        }).start();
     }
+
+    //handler
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+
+
+                    s.setEnabled(false);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }
