@@ -1,5 +1,7 @@
 package com.smailnet.demo.com.smailnet.demo.model;
 
+import java.util.UUID;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -13,9 +15,11 @@ public class Contacts extends RealmObject {
     public Contacts(String nickName, String email) {
         this.nickName = nickName;
         this.email = email;
+        id = UUID.randomUUID().toString();
     }
 
     public Contacts() {
+        id = UUID.randomUUID().toString();
     }
 
     public String getId() {
