@@ -16,6 +16,7 @@
 package com.smailnet.eamil;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.smailnet.eamil.Utils.AddressUtil;
 import com.smailnet.eamil.Utils.ConfigCheckUtil;
@@ -37,6 +38,7 @@ import javax.mail.Address;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
@@ -184,8 +186,17 @@ class EmailCore {
         message.setSubject(subject);
         if (text != null){
             message.setText(text);
-        }else if (content != null){
-            message.setContent(content, "text/html");
+        }
+        if (content != null){
+            try {
+                message.setContent((Multipart) content);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                Log.e("merr", e.getLocalizedMessage());
+
+            }
+            Log.e("fjok2", "fjok2");
+
         }
         message.setSentDate(new Date());
         message.saveChanges();
@@ -199,8 +210,14 @@ class EmailCore {
      */
     public void sendMail() throws MessagingException {
         Transport transport = session.getTransport(SMTP);
-        transport.connect(smtpHost, account, password);
-        transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
+        try {
+            transport.connect(smtpHost, account, password);
+            transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            Log.e("senderr", e.getLocalizedMessage());
+
+        }
         transport.close();
     }
 

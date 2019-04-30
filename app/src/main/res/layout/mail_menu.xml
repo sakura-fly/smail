@@ -8,4 +8,10 @@
         android:title="设置联系人"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/choose_file"
+        android:orderInCategory="80"
+        android:title="选择附件"
+        app:showAsAction="never" />
+
 </menu>

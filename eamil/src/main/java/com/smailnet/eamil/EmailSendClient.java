@@ -17,17 +17,24 @@
 package com.smailnet.eamil;
 
 import android.app.Activity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.smailnet.eamil.Callback.GetSendCallback;
 import com.smailnet.eamil.Utils.AddressUtil;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 
 /**
@@ -130,13 +137,37 @@ public class EmailSendClient {
     }
 
     /**
-     * 设置邮件内容（HTML）
-     * @param content
+     * 设置附件
+     * @param url
      * @return
      */
-    public EmailSendClient setContent(Object content){
-        this.content = content;
+    public EmailSendClient setContent(String url)  {
+        if (url != null && !url.isEmpty()){
+            MimeMultipart m  = new MimeMultipart("mixed");
+            try {
+                m.addBodyPart(createAttachment(new File(url),null));
+                Log.e("fjok", "fjok");
+
+            } catch (MessagingException e) {
+                Log.e("errrr", e.getLocalizedMessage());
+            }
+            this.content = m;
+        }
+
         return this;
+    }
+
+    private MimeBodyPart createAttachment(File file, String fileName)  {
+        MimeBodyPart   attachmentPart = new MimeBodyPart();
+        FileDataSource fds            = new FileDataSource(file);
+        try {
+            attachmentPart.setDataHandler(new DataHandler(fds));
+            attachmentPart.setFileName(null == fileName ? MimeUtility.encodeText(fds.getName()) : MimeUtility.encodeText(fileName));
+        } catch (Exception e) {
+            Log.e("errrr", e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        return attachmentPart;
     }
 
     /**

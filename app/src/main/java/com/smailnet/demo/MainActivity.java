@@ -16,6 +16,9 @@ import android.widget.EditText;
 // import android.widget.ListPopupWindow;
 import android.widget.Toast;
 
+import com.leon.lfilepickerlibrary.LFilePicker;
+import com.leon.lfilepickerlibrary.utils.Constant;
+import com.smailnet.demo.com.smailnet.demo.model.Contacts;
 import com.smailnet.eamil.Callback.GetReceiveCallback;
 import com.smailnet.eamil.EmailReceiveClient;
 import com.smailnet.eamil.EmailSendClient;
@@ -24,16 +27,28 @@ import com.smailnet.eamil.EmailMessage;
 import com.smailnet.islands.Interface.OnRunningListener;
 import com.smailnet.islands.Islands;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener  {
 
     private EditText address_editText;
     private EditText title_editText;
     private EditText text_editText;
+    private String url;// 附件地址
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("sh.c")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         initView();
@@ -57,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        button2.setOnClickListener(this);
     }
 
+
+    /**
+     * 创建菜单
+     * @param menu
+     * @return
+     */
     @SuppressLint("ResourceType")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,8 +88,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        startActivity(new Intent(this,ConstantsActivity.class));
+        switch (item.getItemId()) {
+            case R.id.menu_1:
+                startActivity(new Intent(this,ConstantsActivity.class));
+
+                break;
+            case R.id.choose_file:
+                new LFilePicker()
+                        .withActivity(MainActivity.this)
+                        .withRequestCode(1000)
+                        .withMutilyMode(false)
+                        .start();
+                default:
+                    break;
+        }
         return true;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 附件选择完
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1000) {
+                List<String> list = data.getStringArrayListExtra(Constant.RESULT_INFO);
+                url = list.get(0);
+            }
+        }
     }
 
     /**
@@ -78,9 +125,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EmailSendClient emailSendClient = new EmailSendClient(EmailApp.emailConfig());
         emailSendClient
                 .setTo(address_editText.getText().toString())                //收件人的邮箱地址
-                .setNickname("我的小可爱")                                    //发件人昵称
+                // .setNickname("我的小可爱")                                    //发件人昵称
                 .setSubject(title_editText.getText().toString())             //邮件标题
-                .setContent(text_editText.getText().toString())              //邮件正文
+                .setContent(url)
+                .setText(text_editText.getText().toString())//邮件文本
                 .sendAsyn(this, new GetSendCallback() {
                     @Override
                     public void sendSuccess() {
@@ -178,13 +226,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showListPopulWindow(){
-        String[] list = { "item1", "item2", "item3", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4", "item4" };
-        ListPopupWindow listPopupWindow = new ListPopupWindow(this);
-        listPopupWindow.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, list));
+        Realm mRealm = Realm.getDefaultInstance();
+
+        RealmResults<Contacts> c = mRealm.where(Contacts.class).findAll();
+        final List<Contacts> contactsList = mRealm.copyFromRealm(c);
+        List<String> nickList = new ArrayList<>();
+        for (Contacts cs : contactsList) {
+            nickList.add(cs.getNickName());
+        }
+        final ListPopupWindow listPopupWindow = new ListPopupWindow(this);
+        listPopupWindow.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, nickList));
         listPopupWindow.setAnchorView(address_editText);
         listPopupWindow.setModal(true);
+        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                address_editText.setText(contactsList.get(i).getEmail());
+                listPopupWindow.dismiss();
+            }
+        });
         listPopupWindow.show();
+
     }
 
 }
