@@ -146,7 +146,10 @@ public class EmailSendClient {
             MimeMultipart m  = new MimeMultipart("mixed");
             try {
                 m.addBodyPart(createAttachment(new File(url),null));
-                Log.e("fjok", "fjok");
+                Log.e("fjok", text);
+                if (text != null && !text.isEmpty()){
+                    m.addBodyPart(textPart());
+                }
 
             } catch (MessagingException e) {
                 Log.e("errrr", e.getLocalizedMessage());
@@ -168,6 +171,18 @@ public class EmailSendClient {
             e.printStackTrace();
         }
         return attachmentPart;
+    }
+
+    private MimeBodyPart toBodyPart(MimeMultipart cover) throws MessagingException {
+        MimeBodyPart wrap = new MimeBodyPart();
+        wrap.setContent(cover);
+        return wrap;
+    }
+
+    private MimeBodyPart textPart() throws MessagingException {
+        MimeBodyPart bodyPart = new MimeBodyPart();
+        bodyPart.setText(text);
+        return bodyPart;
     }
 
     /**

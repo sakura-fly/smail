@@ -127,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setTo(address_editText.getText().toString())                //收件人的邮箱地址
                 // .setNickname("我的小可爱")                                    //发件人昵称
                 .setSubject(title_editText.getText().toString())             //邮件标题
-                .setContent(url)
                 .setText(text_editText.getText().toString())//邮件文本
+                .setContent(url)
                 .sendAsyn(this, new GetSendCallback() {
                     @Override
                     public void sendSuccess() {
